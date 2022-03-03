@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 #include <vector>
 #include <unordered_map>
@@ -6,7 +8,7 @@
 using namespace std;
 
 class Regex {
-  private:
+  public:
     unordered_set<char> alphabet;
     string completedExpression;
     string reversePolishNotation;
@@ -61,5 +63,6 @@ class Regex {
     Regex(unordered_set<char> alphabet_, string regex);
     bool operator==(const Regex &rhs) const;
     bool check(string str);
+    void epsilonReach(NFA::NFAState* q, unordered_set<NFA::NFAState*> &reach);
     bool checkEpsilonReach(NFA::NFAState* q);
 };
