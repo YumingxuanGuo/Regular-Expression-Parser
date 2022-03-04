@@ -9,7 +9,7 @@ int main() {
   cin >> regex;
   unordered_set<char> alphabet;
   Regex reg(alphabet, regex);
-  // cout << reg.completedExpression << endl << reg.reversePolishNotation << endl;
+  cout << reg.completedExpression << endl << reg.reversePolishNotation << endl;
   string str = "";
   while (true) {
     cout << "Please type in the string:" << endl;

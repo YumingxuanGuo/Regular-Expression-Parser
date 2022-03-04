@@ -12,7 +12,7 @@ Regex::Regex(unordered_set<char> alphabet_, string regex) {
       completedExpression += '.';
     if ((regex[i] == '*' || regex[i] == ')') && isSymbol(regex[i+1]))
       completedExpression += '.';
-    if ((isSymbol(regex[i]) || regex[i] == '*') && regex[i+1] == '(')
+    if ((isSymbol(regex[i]) || regex[i] == '*' || regex[i] == ')') && regex[i+1] == '(')
       completedExpression += '.';
   }
   completedExpression += regex[regex.size()-1];
