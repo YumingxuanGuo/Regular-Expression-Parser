@@ -9,11 +9,14 @@ int main() {
   cin >> regex;
   unordered_set<char> alphabet;
   Regex reg(alphabet, regex);
-  cout << reg.reversePolishNotation << endl;
-  string str;
-  cout << "Please type in the string:" << endl;
-  cin >> str;
-  if (reg.check(str)) cout << "Accepted." << endl;
-  else cout << "Refused." << endl;
+  // cout << reg.completedExpression << endl << reg.reversePolishNotation << endl;
+  string str = "";
+  while (true) {
+    cout << "Please type in the string:" << endl;
+    cin >> str;
+    if (str == "q") break;
+    if (reg.check(str)) cout << "Accepted." << endl << endl;
+    else cout << "Refused." << endl << endl;
+  }
   return 0;
 }

@@ -12,6 +12,8 @@ Regex::Regex(unordered_set<char> alphabet_, string regex) {
       completedExpression += '.';
     if ((regex[i] == '*' || regex[i] == ')') && isSymbol(regex[i+1]))
       completedExpression += '.';
+    if ((isSymbol(regex[i]) || regex[i] == '*') && regex[i+1] == '(')
+      completedExpression += '.';
   }
   completedExpression += regex[regex.size()-1];
   reversePolishNotation = convertToRPN(completedExpression);
@@ -151,9 +153,6 @@ bool Regex::check(string str) {
         return true;
       }
     }
-    // for (NFA::NFAState* out : q->outs[str[i]]) {
-    //   buffer.push(out);
-    // }
     unordered_set<NFA::NFAState*> reach;
     epsilonReach(q, reach);
     for (NFA::NFAState* epsilonReach : reach) {
