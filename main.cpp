@@ -12,7 +12,7 @@ int main() {
   // cout << reg.completedExpression << endl << reg.reversePolishNotation << endl;
   string str = "";
   while (true) {
-    cout << "Please type in the string:" << endl;
+    cout << "Please type in the string (type in 'q' to quit):" << endl;
     cin >> str;
     if (str == "q") break;
     if (reg.check(str)) cout << "Accepted." << endl << endl;
