@@ -18,4 +18,6 @@ The input of the regular expression must follow the following convension.
 
 * Higher precedence of operation: represented by the parentheses, '(' and ')'.
 
+* The empty string (epsilon): represented by '$'.
+
 * No spaces are needed.
