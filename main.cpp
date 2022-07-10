@@ -8,7 +8,7 @@ int main() {
   cout << "Please type in the regular expression:" << endl;
   cin >> regex;
   unordered_set<char> alphabet;
-  Regex reg(alphabet, regex);
+  Regex reg(regex);
   // cout << reg.completedExpression << endl << reg.reversePolishNotation << endl;
   string str = "";
   while (true) {

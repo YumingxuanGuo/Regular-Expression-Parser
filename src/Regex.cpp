@@ -3,8 +3,7 @@
 #include <stack>
 #include <assert.h>
 
-Regex::Regex(unordered_set<char> alphabet_, string regex) {
-  alphabet = alphabet_;
+Regex::Regex(string regex) {
   completedExpression = "";
   for (unsigned int i = 0; i < regex.size()-1; ++i) {
     completedExpression += regex[i];
@@ -16,13 +15,10 @@ Regex::Regex(unordered_set<char> alphabet_, string regex) {
       completedExpression += '.';
   }
   completedExpression += regex[regex.size()-1];
-  reversePolishNotation = convertToRPN(completedExpression);
+  string reversePolishNotation = convertToRPN(completedExpression);
   generateNFA(reversePolishNotation);
 }
 
-/*
-Convert the regular expression to the reverse polish notation.
-*/
 string Regex::convertToRPN(string completedExpression) {
   queue<char> output;
   stack<char> operators;
@@ -72,9 +68,6 @@ string Regex::convertToRPN(string completedExpression) {
   return RPN;
 }
 
-/*
-Generate the corresponding NFA using Thompson's Algorithm.
-*/
 void Regex::generateNFA(string RPN) {
   stack<NFA> chain;
   for (unsigned int i = 0; i < RPN.size(); ++i) {
@@ -94,9 +87,9 @@ void Regex::generateNFA(string RPN) {
       NFA first = chain.top();
       chain.pop();
       if (first.e->outs.find('$') != first.e->outs.end()) {
-        unordered_set<NFA::NFAState*> epsilon = first.e->outs['$'];
-        epsilon.insert(second.s);
-        first.e->outs['$'] = epsilon;
+        // unordered_set<NFA::NFAState*> epsilon = first.e->outs['$'];
+        // epsilon.insert(second.s);
+        first.e->outs['$'].insert(second.s);
       } else {
         first.e->outs['$'] = unordered_set<NFA::NFAState*>{second.s};
       }
@@ -148,15 +141,15 @@ bool Regex::check(string str) {
     NFA::NFAState* q = buffer.front();
     buffer.pop();
     if (i == str.size()) {
-      if (checkEpsilonReach(q)) {
+      if (checkAcceptance(q)) {
         delete sentinal;
         return true;
       }
     }
-    unordered_set<NFA::NFAState*> reach;
-    epsilonReach(q, reach);
-    for (NFA::NFAState* epsilonReach : reach) {
-      for (NFA::NFAState* out : epsilonReach->outs[str[i]]) {
+    unordered_set<NFA::NFAState*> epsilonReach;
+    recordEpsilonReach(q, epsilonReach);
+    for (NFA::NFAState* state : epsilonReach) {
+      for (NFA::NFAState* out : state->outs[str[i]]) {
         buffer.push(out);
       }
     }
@@ -170,18 +163,18 @@ bool Regex::check(string str) {
   return false;
 }
 
-void Regex::epsilonReach(NFA::NFAState* q, unordered_set<NFA::NFAState*> &reach) {
-  reach.insert(q);
+void Regex::recordEpsilonReach(NFA::NFAState* q, unordered_set<NFA::NFAState*> &epsilonReach) {
+  epsilonReach.insert(q);
   for (NFA::NFAState* out : q->outs['$']) {
-    if (!reach.contains(out)) {
-      epsilonReach(out, reach);
+    if (!epsilonReach.contains(out)) {
+      recordEpsilonReach(out, epsilonReach);
     }
   }
 }
 
-bool Regex::checkEpsilonReach(NFA::NFAState* q) {
+bool Regex::checkAcceptance(NFA::NFAState* q) {
   unordered_set<NFA::NFAState*> reach;
-  epsilonReach(q, reach);
+  recordEpsilonReach(q, reach);
   for (NFA::NFAState* out : reach) {
     if (out == nfa.e) return true;
   }
